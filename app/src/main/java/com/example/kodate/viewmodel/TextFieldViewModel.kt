@@ -42,6 +42,10 @@ class TextFieldViewModel : ViewModel() {
         fetchInterests()
     }
 
+    fun clearTextField(){
+        textFieldState.value = TextFieldState()
+    }
+
     fun setEmail(email: String){
         textFieldState.value = textFieldState.value.copy(email = email)
         validateEmail()

@@ -240,7 +240,7 @@ fun Home(modifier: Modifier, navController: NavHostController, logInViewModel: L
             Box(
                 Modifier
                     .height(100.dp)
-                    .width(180.dp)
+                    .width(180.dp).padding(bottom = 10.dp)
                     .background(color = Color(0XFF22172A), shape = RoundedCornerShape(90.dp)), contentAlignment = Alignment.Center) {
                 Row(
                     Modifier
@@ -252,7 +252,7 @@ fun Home(modifier: Modifier, navController: NavHostController, logInViewModel: L
                             .height(60.dp)
                             .background(color = Color.White, shape = RoundedCornerShape(40.dp))
                             .clickable {
-                                if (currentIndex < listUsers.size - 1) {
+                                if (currentIndex <= listUsers.size - 1) {
                                     currentIndex++
                                 } else {
                                     println("No more user")
@@ -270,7 +270,7 @@ fun Home(modifier: Modifier, navController: NavHostController, logInViewModel: L
                             )
                             .clickable {
                                 coroutineScope.launch {
-                                    if (currentIndex < listUsers.size - 1) {
+                                    if (currentIndex <= listUsers.size - 1) {
                                         homeViewModel.handleLike(user1Email = logInViewModel.fetchUserState.value!!.email, user2Email = currentChoice!!.email)
                                         currentIndex++
                                     } else {

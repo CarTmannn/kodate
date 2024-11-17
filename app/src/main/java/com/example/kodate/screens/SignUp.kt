@@ -114,7 +114,7 @@ fun SignUpScreen(modifier: Modifier, navController: NavHostController, viewModel
         Modifier
             .fillMaxSize()
             .background(color = Color(0XFF090e12))
-            .padding(PaddingValues(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 10.dp))) {
+            .padding(PaddingValues(top = 50.dp, start = 20.dp, end = 20.dp, bottom = 10.dp))) {
         Text(
             text = "Sign Up",
             fontSize = 45.sp,
@@ -388,7 +388,7 @@ fun SignUpEmail(onContinueClicked: () -> Unit, viewModel: TextFieldViewModel = v
                 .align(Alignment.CenterHorizontally), contentAlignment = Alignment.Center) {
             Image(painter = painterResource(id = R.drawable.google), contentDescription = "", contentScale = ContentScale.Crop)
         }
-        Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(Modifier.fillMaxSize().padding(bottom = 15.dp), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "By clicking continue, you agree to our Terms of Service and Privacy Policy", color = Color.White, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center, fontSize = 12.sp)
         }
     }

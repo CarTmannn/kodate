@@ -99,7 +99,7 @@ fun DisplayImage(navController: NavHostController, viewModel: TextFieldViewModel
         Modifier
             .fillMaxSize()
             .background(color = Color(0XFF090e12))
-            .padding(PaddingValues(top = 40.dp, start = 20.dp, end = 20.dp, bottom = 20.dp))
+            .padding(PaddingValues(top = 50.dp, start = 20.dp, end = 20.dp, bottom = 20.dp))
             .verticalScroll(scrollState)) {
         Text(text = "Let's get closer", color = Color(0XFF7764fa), fontSize = 35.sp, fontWeight = FontWeight.Bold)
         if (isChooseDisplayImage){
@@ -214,7 +214,7 @@ fun ChooseInterest(onNextClicked: ()-> Unit, viewModel: TextFieldViewModel = vie
         TextFieldBox(
             width = 500,
             desc = "City",
-            value = viewModel.textFieldState.value.email,
+            value = viewModel.textFieldState.value.city,
             onValueChange = { city -> viewModel.setCity(city) }
         )
         Spacer(modifier = Modifier.height(20.dp))

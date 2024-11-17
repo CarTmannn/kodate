@@ -87,7 +87,7 @@ fun LoginScreen(modifier: Modifier, navController: NavHostController, viewModel:
         Modifier
             .fillMaxSize()
             .background(color = Color(0XFF090e12))
-            .padding(PaddingValues(top = 30.dp, bottom = 20.dp, end = 20.dp, start = 20.dp))) {
+            .padding(PaddingValues(top = 50.dp, bottom = 20.dp, end = 20.dp, start = 20.dp))) {
         Text(text = "Find the spark, right where you are!", color = Color(0XFF7764fa), fontSize = 30.sp, lineHeight = 30.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(
             PaddingValues(end = 100.dp)
         ))
@@ -166,7 +166,7 @@ fun LoginScreen(modifier: Modifier, navController: NavHostController, viewModel:
         }
         Column(
             Modifier
-                .fillMaxSize(), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally) {
+                .fillMaxSize().padding(bottom = 20.dp), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally) {
             Row {
                 Text(text = "Don’t have an account?", color = Color(0XFFfdfbff), fontWeight = FontWeight.Medium)
                 Spacer(modifier = Modifier.width(5.dp))

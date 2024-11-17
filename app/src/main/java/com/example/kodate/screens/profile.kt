@@ -57,17 +57,15 @@ import coil.compose.rememberImagePainter
 @Composable
 fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel: LogInViewModel = viewModel()){
     val userData by logInViewModel.fetchUserState.collectAsState()
-
     fun ManipulateEmail(email: String): String {
         return email.replace("@", "%40")
     }
 
-    Scaffold(containerColor = Color(0XFF090E12)) {
-        innerPadding -> Column(Modifier.padding(innerPadding)) {
+    Column(Modifier.fillMaxSize().background(color = Color(0XFF090E12))) {
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(110.dp)
                 .shadow(
                     elevation = 10.dp,
                     clip = true,
@@ -78,12 +76,18 @@ fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel
                 .background(
                     color = Color(0XFF090E12),
                     shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
-                ), contentAlignment = Alignment.CenterStart) {
-            Column(Modifier.padding(20.dp)) {
+                ), contentAlignment = Alignment.CenterStart
+        ) {
+            Column(Modifier.padding(PaddingValues(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 10.dp))) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     BackButton(modifier = Modifier)
                     Spacer(modifier = Modifier.width(20.dp))
-                    Text(text = "Profile", color = Color.White, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "Profile",
+                        color = Color.White,
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
 
             }
@@ -94,12 +98,15 @@ fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel
             Modifier
                 .padding(20.dp)
                 .fillMaxSize()
-                .verticalScroll(scrollState)) {
+                .verticalScroll(scrollState)
+        ) {
 
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth(Alignment.CenterHorizontally), verticalAlignment = Alignment.CenterVertically) {
+                    .wrapContentWidth(Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Box(
 
                     Modifier
@@ -114,9 +121,20 @@ fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel
                         .background(color = Color(0XFF1c2125), shape = RoundedCornerShape(75.dp))
                         .clip(shape = RoundedCornerShape(75.dp))
                         .clickable {
-                            println("https://firebasestorage.googleapis.com/v0/b/chatapp-8e574.appspot.com/o/displayPict%2F${ManipulateEmail(userData!!.profilePic)}.jpg?alt=media")
-                        }, ) {
-                    Image(painter = rememberImagePainter(data = "https://firebasestorage.googleapis.com/v0/b/chatapp-8e574.appspot.com/o/profileImage%2F${ManipulateEmail(userData!!.profilePic)}.jpg?alt=media") , contentDescription = "", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                        },
+                ) {
+                    Image(
+                        painter = rememberImagePainter(
+                            data = "https://firebasestorage.googleapis.com/v0/b/chatapp-8e574.appspot.com/o/profileImage%2F${
+                                ManipulateEmail(
+                                    userData!!.profilePic
+                                )
+                            }.jpg?alt=media"
+                        ),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
                 Spacer(modifier = Modifier.width(40.dp))
                 Box(
@@ -131,30 +149,78 @@ fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel
                             spotColor = Color(0XFF6e3859)
                         )
                         .clip(shape = RoundedCornerShape(10.dp))
-                        .background(color = Color(0XFF1c2125), shape = RoundedCornerShape(10.dp))) {
-                    Image(painter = rememberImagePainter(data = "https://firebasestorage.googleapis.com/v0/b/chatapp-8e574.appspot.com/o/displayPict%2F${ManipulateEmail(userData!!.profilePic)}.jpg?alt=media"), contentDescription = "", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                        .background(color = Color(0XFF1c2125), shape = RoundedCornerShape(10.dp))
+                ) {
+                    Image(
+                        painter = rememberImagePainter(
+                            data = "https://firebasestorage.googleapis.com/v0/b/chatapp-8e574.appspot.com/o/displayPict%2F${
+                                ManipulateEmail(
+                                    userData!!.profilePic
+                                )
+                            }.jpg?alt=media"
+                        ),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))
-            Text(text = "Name", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0XFF7764fa))
+            Text(
+                text = "Name",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0XFF7764fa)
+            )
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = userData?.name.toString(), fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.White)
+            Text(
+                text = userData?.name.toString(),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.White
+            )
             Spacer(modifier = Modifier.height(20.dp))
-            Text(text = "About", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0XFF7764fa))
+            Text(
+                text = "About",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0XFF7764fa)
+            )
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = userData?.bio.toString(), fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.White)
+            Text(
+                text = userData?.bio.toString(),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.White
+            )
             Spacer(modifier = Modifier.height(20.dp))
-            Text(text = "Gender", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0XFF7764fa))
+            Text(
+                text = "Gender",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0XFF7764fa)
+            )
             Spacer(modifier = Modifier.height(10.dp))
-            Text(text = userData?.gender.toString(), fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.White)
+            Text(
+                text = userData?.gender.toString(),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.White
+            )
             Spacer(modifier = Modifier.height(20.dp))
-            Text(text = "Interests", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0XFF7764fa))
+            Text(
+                text = "Interests",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0XFF7764fa)
+            )
             Box(
                 Modifier
                     .fillMaxWidth()
                     .height(80.dp)
-                    .padding(10.dp), contentAlignment = Alignment.CenterStart) {
-                if (userData?.interests!!.isEmpty()){
+                    .padding(10.dp), contentAlignment = Alignment.CenterStart
+            ) {
+                if (userData?.interests!!.isEmpty()) {
                     Box(modifier = Modifier)
                 } else {
                     LazyRow() {
@@ -179,10 +245,9 @@ fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel
                         }
                     }
                 }
-            Spacer(modifier = Modifier.height(80.dp))
+                Spacer(modifier = Modifier.height(80.dp))
+            }
         }
-    }
 
     }
-}
 }

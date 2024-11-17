@@ -20,18 +20,20 @@ import com.example.kodate.viewmodel.SignUpViewModel
 import com.example.kodate.viewmodel.TextFieldViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kodate.viewmodel.LogInViewModel
+import com.example.kodate.viewmodel.MessagesViewModel
 
 @Composable
 fun NavigationApp(navController: NavHostController = rememberNavController()){
     val signUpViewModel: SignUpViewModel = viewModel()
     val logInViewModel: LogInViewModel = viewModel()
+    val messagesViewModel: MessagesViewModel = viewModel()
 
     NavHost(navController = navController, startDestination = "logIn"){
         composable("logIn") { LoginScreen(modifier = Modifier, navController = navController, logInViewModel = logInViewModel) }
         composable("signUpScreen") { SignUpScreen(modifier = Modifier, navController = navController, signUpViewModel = signUpViewModel) }
         composable("home") { Home(modifier = Modifier, navController = navController, logInViewModel = logInViewModel) }
-        composable("messages") { MessagesScreen( navController = navController, logInViewModel = logInViewModel) }
-        composable("chatRoom") { ChatRoom(modifier = Modifier, navController = navController) }
+        composable("messages") { MessagesScreen( navController = navController, logInViewModel = logInViewModel, messagesViewModel = messagesViewModel) }
+        composable("chatRoom") { ChatRoom(modifier = Modifier, navController = navController, messagesViewModel = messagesViewModel, logInViewModel = logInViewModel) }
         composable("profile") { Profile(modifier = Modifier, navController = navController, logInViewModel = logInViewModel) }
         composable("displayImage") { DisplayImage(navController = navController,  signUpViewModel = signUpViewModel) }
     }
