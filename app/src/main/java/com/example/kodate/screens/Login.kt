@@ -1,7 +1,10 @@
 package com.example.kodate.screens
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.text.style.LineHeightSpan
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -31,6 +34,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -130,7 +134,7 @@ fun LoginScreen(modifier: Modifier, navController: NavHostController, viewModel:
                             email = logInViewModel.loginState.value.email,
                             password = logInViewModel.loginState.value.password
                         )
-                        println("ini foto ${logInViewModel.fetchUserState.value?.profilePic}")
+
                     }
 
                 }
@@ -145,7 +149,9 @@ fun LoginScreen(modifier: Modifier, navController: NavHostController, viewModel:
         Box(
             Modifier
                 .fillMaxWidth()
-                .clickable { }
+                .clickable {
+
+                }
                 .height(65.dp)
                 .background(color = Color(0XFFdb4a39), shape = RoundedCornerShape(40.dp))) {
             Row(
@@ -166,7 +172,8 @@ fun LoginScreen(modifier: Modifier, navController: NavHostController, viewModel:
         }
         Column(
             Modifier
-                .fillMaxSize().padding(bottom = 20.dp), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally) {
+                .fillMaxSize()
+                .padding(bottom = 20.dp), verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally) {
             Row {
                 Text(text = "Don’t have an account?", color = Color(0XFFfdfbff), fontWeight = FontWeight.Medium)
                 Spacer(modifier = Modifier.width(5.dp))

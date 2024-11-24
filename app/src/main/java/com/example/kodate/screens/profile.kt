@@ -80,7 +80,7 @@ fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel
         ) {
             Column(Modifier.padding(PaddingValues(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 10.dp))) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    BackButton(modifier = Modifier)
+                    BackButton(modifier = Modifier, { navController.navigate("home") })
                     Spacer(modifier = Modifier.width(20.dp))
                     Text(
                         text = "Profile",

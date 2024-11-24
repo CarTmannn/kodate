@@ -134,7 +134,7 @@ fun Home(modifier: Modifier, navController: NavHostController, logInViewModel: L
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit){
-        homeViewModel.GetListUsers(email = logInViewModel.fetchUserState.value!!.email, gender = if(logInViewModel.fetchUserState.value!!.gender == "female") "male" else "female", likedUsers = logInViewModel.fetchUserState.value!!.likedUsers)
+        homeViewModel.getListUsers(email = logInViewModel.fetchUserState.value!!.email, gender = if(logInViewModel.fetchUserState.value!!.gender == "female") "male" else "female", likedUsers = logInViewModel.fetchUserState.value!!.likedUsers)
     }
 
     BackHandler {
@@ -252,10 +252,9 @@ fun Home(modifier: Modifier, navController: NavHostController, logInViewModel: L
                             .height(60.dp)
                             .background(color = Color.White, shape = RoundedCornerShape(40.dp))
                             .clickable {
-                                if (currentIndex <= listUsers.size - 1) {
+                                currentChoice?.let { user ->
+                                    homeViewModel.clearUser(user.email)
                                     currentIndex++
-                                } else {
-                                    println("No more user")
                                 }
                             }, contentAlignment = Alignment.Center) {
                         Icon(imageVector = Icons.Filled.Clear, contentDescription = "", tint = Color(0XFF22172A), modifier = Modifier.size(35.dp))

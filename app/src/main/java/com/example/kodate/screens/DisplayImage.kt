@@ -80,7 +80,7 @@ fun DisplayImage(navController: NavHostController, viewModel: TextFieldViewModel
 
     LaunchedEffect(signUpState){
         if(signUpState.isUploadImageSuccess){
-            navController.navigate("home")
+            navController.navigate("logIn")
         } else {
             println("Not success yet")
         }

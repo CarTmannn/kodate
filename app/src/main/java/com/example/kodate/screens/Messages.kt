@@ -65,19 +65,25 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
     }
     val coroutine = rememberCoroutineScope()
     val listChats by messagesViewModel.listChats.collectAsState()
+    val listMatches by logInViewModel.fetchUserState.collectAsState()
     
     LaunchedEffect(Unit){
         messagesViewModel.getChat(logInViewModel.fetchUserState.value!!.email)
     }
 
-    Column(modifier = Modifier.fillMaxSize().background(color = Color(0XFF090e12)),) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(color = Color(0XFF090e12)),) {
         Box (
             Modifier
                 .height(85.dp)
                 .fillMaxWidth()
                 .background(color = Color(0XFF090e12)), contentAlignment = Alignment.CenterStart) {
             Row(Modifier.padding(PaddingValues(start = 20.dp, end = 20.dp, top = 40.dp)), verticalAlignment = Alignment.CenterVertically) {
-                BackButton(Modifier)
+                BackButton(Modifier, onClicked = {
+                    println("Button clicked")
+                    println("listChats: $listChats")
+                })
                 Spacer(Modifier.width(20.dp))
                 Text(
                     text = "Messages",
@@ -104,9 +110,9 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                 Image(painter = painterResource(id = R.drawable.o), contentDescription = "", Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
             }
 
-            Column(Modifier.padding(vertical = 0.dp, horizontal = 20.dp), horizontalAlignment = Alignment.Start) {
+            Column(Modifier.padding(vertical = 20.dp, horizontal = 20.dp), horizontalAlignment = Alignment.Start) {
                 Text(text = "Recent Matches", color = Color.White, fontSize = 20.sp)
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(10.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         Modifier
@@ -116,11 +122,11 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                         Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
                             Icon(imageVector = Icons.Filled.Favorite, contentDescription = "", tint = Color(0XFFFB0000))
                             Spacer(Modifier.height(10.dp))
-                            Text(text = logInViewModel.fetchUserState.value!!.matchedUsers.size.toString(), color = Color(0XFFFB0000))
+                            Text(text = listMatches!!.matchedUsers.size.toString(), color = Color(0XFFFB0000))
                         }
                     }
                     LazyRow(){
-                        items(logInViewModel.fetchUserState.value!!.matchedUsers){item ->
+                        items(listMatches!!.matchedUsers){item ->
                             Spacer(modifier = Modifier.width(20.dp))
                             Box(
                                 Modifier
@@ -132,7 +138,12 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                                                 user2 = item
                                             )
                                             messagesViewModel.setTempEmail(item)
-                                            messagesViewModel.setTempChatId(chatId = messagesViewModel.generateChatId(user1 = logInViewModel.fetchUserState.value!!.email, user2 = item) )
+                                            messagesViewModel.setTempChatId(
+                                                chatId = messagesViewModel.generateChatId(
+                                                    user1 = logInViewModel.fetchUserState.value!!.email,
+                                                    user2 = item
+                                                )
+                                            )
                                             navController.navigate("chatRoom")
                                         }
 
@@ -169,10 +180,11 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                            Box(
                                Modifier
                                    .fillMaxWidth()
-                                   .height(70.dp).clickable { messagesViewModel.setTempEmail(otherUserEmail!!)
+                                   .height(70.dp)
+                                   .clickable {
+                                       messagesViewModel.setTempEmail(otherUserEmail!!)
                                        messagesViewModel.setTempChatId(item.chatId)
-                                       println("jam terakhir ${item.lastMessageAt}")
-                                   navController.navigate("chatRoom")
+                                       navController.navigate("chatRoom")
                                    }
                            ) {
                                Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
@@ -195,12 +207,12 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                                            userName.value = messagesViewModel.fetchUserNameByEmail(otherUserEmail!!)
                                        }
                                        Text(text = userName.value, color = Color.White, fontWeight = FontWeight.Bold)
-                                       Spacer(Modifier.height(10.dp))
+                                       Spacer(Modifier.height(7.dp))
                                        Box(
                                            Modifier
                                                .width(200.dp)
                                                .height(25.dp)) {
-                                           Text(text = item.lastMessage, color = Color.White)
+                                           Text(text =  item.lastMessage, color = if(item.read[logInViewModel.fetchUserState.value!!.email] == true) Color.Gray else Color.White, fontSize = 16.sp)
                                        }
 
 
@@ -209,6 +221,9 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                                    Column(
                                        modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally
                                    ){
+                                       if(item.read[logInViewModel.fetchUserState.value!!.email] == true){
+                                           Box(modifier = Modifier)}
+                                       else{
                                        Box(
                                            Modifier
                                                .size(15.dp)
@@ -216,7 +231,7 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                                                    color = Color(0XFFDD88CF),
                                                    shape = RoundedCornerShape(15.dp)
                                                )) {
-                                       }
+                                       }}
                                        Spacer(Modifier.height(25.dp))
                                        Text(text = if(item.lastMessageAt == null) "" else messagesViewModel.formatTimestamp(item.lastMessageAt!!.toDate()), color = Color(0XFF9EA3AE),)
                                    }
@@ -224,7 +239,7 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                            }
                            Spacer(modifier = Modifier.height(10.dp))
                        }
-                    } //messagesViewModel.formatTimestamp(item.lastMessageAt.toString())
+                    } 
                     
                 }
             }
@@ -234,10 +249,13 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
     }
 
 @Composable
-fun BackButton(modifier: Modifier) {
+fun BackButton(modifier: Modifier, onClicked: ()-> Unit) {
     Box(
         Modifier
             .size(45.dp)
+            .clickable {
+                onClicked()
+            }
             .background(Color(0XFF090e12), shape = RoundedCornerShape(25.dp))
             .border(
                 width = 2.dp,

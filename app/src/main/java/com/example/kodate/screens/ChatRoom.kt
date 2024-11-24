@@ -83,6 +83,7 @@ fun ChatRoom(modifier: Modifier = Modifier, navController: NavHostController, te
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
+        chatRoomViewModel.updateReadStatus(chatId = messagesViewModel.generateChatId(user1 = logInViewModel.fetchUserState.value!!.email, user2 = tempEmail), email = logInViewModel.fetchUserState.value!!.email)
         chatRoomViewModel.getTexts(
             user1 = logInViewModel.fetchUserState.value!!.email,
             user2 = tempEmail
@@ -90,6 +91,16 @@ fun ChatRoom(modifier: Modifier = Modifier, navController: NavHostController, te
         userName.value = messagesViewModel.fetchUserNameByEmail(tempEmail)
         if (listChats.isNotEmpty()) {
             lazyListState.animateScrollToItem(listChats.size - 1)
+        }
+    }
+
+    LaunchedEffect(listChats) {
+        if (listChats.isNotEmpty()) {
+            val currentUserEmail = logInViewModel.fetchUserState.value!!.email
+            chatRoomViewModel.updateReadStatus(
+                chatId = messagesViewModel.generateChatId(user1 = currentUserEmail, user2 = tempEmail),
+                email = currentUserEmail
+            )
         }
     }
 
@@ -117,7 +128,7 @@ fun ChatRoom(modifier: Modifier = Modifier, navController: NavHostController, te
                 }
 
             }
-            BackButton(Modifier.align(Alignment.CenterStart))
+            BackButton(Modifier.align(Alignment.CenterStart), onClicked = { navController.navigate("messages") })
 
         }
         Divider(
@@ -275,7 +286,7 @@ fun ChatBubble(modifier: Modifier = Modifier, backGroundColor: Color, textColor:
             .padding(horizontal = 10.dp)
             .background(color = backGroundColor, shape = RoundedCornerShape(10.dp))
             ) {
-        Text(text = message, fontSize = 16.sp, color = textColor, modifier = Modifier.padding(10.dp))
+        Text(text = message, fontSize = 17.sp, color = textColor, modifier = Modifier.padding(10.dp))
     }
 }
 

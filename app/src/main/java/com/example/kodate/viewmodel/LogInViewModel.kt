@@ -1,22 +1,18 @@
 package com.example.kodate.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kodate.data.model.TextFieldState
 import com.example.kodate.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class LogInViewModel : ViewModel() {
+class LogInViewModel() : ViewModel() {
     var loginState = mutableStateOf(TextFieldState())
         private set
     private var _fetchUserState = MutableStateFlow<User?>(null)
@@ -37,6 +33,10 @@ class LogInViewModel : ViewModel() {
     fun setPassword(password: String){
         loginState.value = loginState.value.copy(password = password)
         validatePassword()
+    }
+
+    fun setUserState(email: String){
+        _fetchUserState.value = _fetchUserState.value!!.copy(email = email)
     }
 
     fun validateEmail(){
@@ -61,28 +61,50 @@ class LogInViewModel : ViewModel() {
         )
     }
 
-    suspend fun logIn(email: String, password: String) {
+    fun logIn(email: String, password: String) {
         _isLoading.value = true
         try {
-            val authResult = db.signInWithEmailAndPassword(email, password).await()
-            val uid  = authResult.user?.uid
-            if (uid != null){
-                val doc = getDb.collection("user").document(uid).get().await()
-                if (doc.exists()){
-                    val profile = doc.toObject(User::class.java)?.copy(userId = doc.id)
-                    _fetchUserState.value = profile
+            db.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener { authResult ->
+                    val uid = authResult.user?.uid
+                    if (uid != null) {
+                        getDb.collection("user").document(uid)
+                            .addSnapshotListener { snapshot, error ->
+                                if (error != null) {
+                                    println("Snapshot listener error: ${error.message}")
+                                    _fetchUserState.value = null
+                                    _isLoggedin.value = false
+                                    return@addSnapshotListener
+                                }
 
-                } else {
-                    println("document does not exists")
-                    _fetchUserState.value = null
+                                if (snapshot != null && snapshot.exists()) {
+                                    val profile = snapshot.toObject(User::class.java)?.copy(userId = snapshot.id)
+                                    _fetchUserState.value = profile
+                                    _isLoggedin.value = true
+                                } else {
+                                    println("Document does not exist")
+                                    _fetchUserState.value = null
+                                    _isLoggedin.value = false
+                                }
+                            }
+                    } else {
+                        println("Failed to retrieve UID")
+                        _isLoggedin.value = false
+                    }
                 }
-            }
-            _isLoggedin.value = true
+                .addOnFailureListener { e ->
+                    _isLoggedin.value = false
+                    println("Failed to login: ${e.message}")
+                }
+                .addOnCompleteListener {
+                    _isLoading.value = false
+                }
         } catch (e: Exception) {
             _isLoggedin.value = false
             println("Failed to login: ${e.message}")
-        } finally {
             _isLoading.value = false
         }
     }
+
+
 }

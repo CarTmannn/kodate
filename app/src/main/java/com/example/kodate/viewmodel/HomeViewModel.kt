@@ -1,8 +1,5 @@
 package com.example.kodate.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.app.GrammaticalInflectionManagerCompat.GrammaticalGender
 import androidx.lifecycle.ViewModel
@@ -20,11 +17,37 @@ class HomeViewModel : ViewModel() {
     val fetchUsers: StateFlow<List<User?>> get() = _fetchUsers
     val db = FirebaseFirestore.getInstance()
 
-    suspend fun GetListUsers(email: String, gender: String, likedUsers: List<String>){
-        var querySnapshot = db.collection("user").whereNotEqualTo("email", email).whereEqualTo("gender", gender).get().await()
+    private val clearedUsers = mutableSetOf<String>()
 
-        val userLists = querySnapshot.documents.mapNotNull { document -> document.toObject(User::class.java) }.filterNot { user -> likedUsers.contains(user.email) }
-        _fetchUsers.value = userLists
+    fun getListUsers(email: String, gender: String, likedUsers: List<String>) {
+        db.collection("user")
+            .whereNotEqualTo("email", email)
+            .whereEqualTo("gender", gender)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val userLists = querySnapshot.documents.mapNotNull { document ->
+                        document.toObject(User::class.java)
+                    }.filterNot { user ->
+                        likedUsers.contains(user.email) || clearedUsers.contains(user.email)
+                    }
+                    _fetchUsers.value = userLists
+                } else {
+                    _fetchUsers.value = emptyList()
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("Error fetching users: ${exception.message}")
+                _fetchUsers.value = emptyList()
+            }
+            .addOnCompleteListener {
+            }
+    }
+
+
+
+    fun clearUser(email: String) {
+        clearedUsers.add(email)
     }
 
     suspend fun handleLike(user1Email: String, user2Email: String) {

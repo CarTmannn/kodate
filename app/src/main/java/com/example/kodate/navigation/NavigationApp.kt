@@ -1,9 +1,9 @@
 package com.example.kodate.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavHost
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,18 +15,18 @@ import com.example.kodate.screens.LoginScreen
 import com.example.kodate.screens.MessagesScreen
 import com.example.kodate.screens.Profile
 import com.example.kodate.screens.SignUpScreen
-import com.example.kodate.screens.UserCard
 import com.example.kodate.viewmodel.SignUpViewModel
-import com.example.kodate.viewmodel.TextFieldViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kodate.viewmodel.LogInViewModel
 import com.example.kodate.viewmodel.MessagesViewModel
 
 @Composable
 fun NavigationApp(navController: NavHostController = rememberNavController()){
+    val context = LocalContext.current
     val signUpViewModel: SignUpViewModel = viewModel()
     val logInViewModel: LogInViewModel = viewModel()
     val messagesViewModel: MessagesViewModel = viewModel()
+
 
     NavHost(navController = navController, startDestination = "logIn"){
         composable("logIn") { LoginScreen(modifier = Modifier, navController = navController, logInViewModel = logInViewModel) }
