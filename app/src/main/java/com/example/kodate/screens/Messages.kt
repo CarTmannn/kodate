@@ -1,5 +1,6 @@
 package com.example.kodate.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,6 +28,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -54,12 +56,13 @@ import com.example.kodate.R
 import com.example.kodate.viewmodel.LogInViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
+import com.example.kodate.viewmodel.HomeViewModel
 import com.example.kodate.viewmodel.MessagesViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewModel = viewModel(), messagesViewModel: MessagesViewModel = viewModel()){
+fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewModel = viewModel(), messagesViewModel: MessagesViewModel = viewModel(), homeViewModel: HomeViewModel = viewModel()){
     fun ManipulateEmail(email: String): String {
         return email.replace("@", "%40")
     }
@@ -69,6 +72,10 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
     
     LaunchedEffect(Unit){
         messagesViewModel.getChat(logInViewModel.fetchUserState.value!!.email)
+    }
+
+    BackHandler {
+        navController.navigate("home")
     }
 
     Column(modifier = Modifier
@@ -81,8 +88,7 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                 .background(color = Color(0XFF090e12)), contentAlignment = Alignment.CenterStart) {
             Row(Modifier.padding(PaddingValues(start = 20.dp, end = 20.dp, top = 40.dp)), verticalAlignment = Alignment.CenterVertically) {
                 BackButton(Modifier, onClicked = {
-                    println("Button clicked")
-                    println("listChats: $listChats")
+                    navController.navigate("home")
                 })
                 Spacer(Modifier.width(20.dp))
                 Text(
@@ -126,7 +132,7 @@ fun MessagesScreen(navController: NavHostController, logInViewModel: LogInViewMo
                         }
                     }
                     LazyRow(){
-                        items(listMatches!!.matchedUsers){item ->
+                        items(listMatches!!.matchedUsers.reversed()){item ->
                             Spacer(modifier = Modifier.width(20.dp))
                             Box(
                                 Modifier

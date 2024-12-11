@@ -36,6 +36,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Person2
 import androidx.compose.material.icons.filled.Person4
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -57,6 +58,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -132,6 +134,7 @@ fun Home(modifier: Modifier, navController: NavHostController, logInViewModel: L
     var currentIndex by remember { mutableStateOf(0) }
     val currentChoice = listUsers.getOrNull(currentIndex)
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit){
         homeViewModel.getListUsers(email = logInViewModel.fetchUserState.value!!.email, gender = if(logInViewModel.fetchUserState.value!!.gender == "female") "male" else "female", likedUsers = logInViewModel.fetchUserState.value!!.likedUsers)
@@ -240,7 +243,8 @@ fun Home(modifier: Modifier, navController: NavHostController, logInViewModel: L
             Box(
                 Modifier
                     .height(100.dp)
-                    .width(180.dp).padding(bottom = 10.dp)
+                    .width(180.dp)
+                    .padding(bottom = 10.dp)
                     .background(color = Color(0XFF22172A), shape = RoundedCornerShape(90.dp)), contentAlignment = Alignment.Center) {
                 Row(
                     Modifier
@@ -270,7 +274,10 @@ fun Home(modifier: Modifier, navController: NavHostController, logInViewModel: L
                             .clickable {
                                 coroutineScope.launch {
                                     if (currentIndex <= listUsers.size - 1) {
-                                        homeViewModel.handleLike(user1Email = logInViewModel.fetchUserState.value!!.email, user2Email = currentChoice!!.email)
+                                        homeViewModel.handleLike(
+                                            user1Email = logInViewModel.fetchUserState.value!!.email,
+                                            user2Email = currentChoice!!.email
+                                        )
                                         currentIndex++
                                     } else {
                                         println("No more user")

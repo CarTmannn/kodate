@@ -58,6 +58,7 @@ import com.example.kodate.navigation.NavigationApp
 import com.example.kodate.screens.ChatRoom
 import com.example.kodate.screens.DisplayImage
 import com.example.kodate.screens.Home
+import com.example.kodate.screens.Loading
 import com.example.kodate.screens.LoginScreen
 import com.example.kodate.screens.MessagesScreen
 import com.example.kodate.screens.Profile
@@ -78,7 +79,6 @@ class MainActivity : ComponentActivity() {
                 Color.Transparent.toArgb(), Color.Transparent.toArgb()
             ),
         )
-        // Get the ComposeView
         setContent {
             KodateTheme {
                 Surface {

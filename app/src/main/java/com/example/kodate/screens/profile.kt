@@ -26,6 +26,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -52,20 +54,24 @@ import com.example.kodate.viewmodel.LogInViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
+import com.example.kodate.viewmodel.HomeViewModel
 
 
 @Composable
-fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel: LogInViewModel = viewModel()){
+fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel: LogInViewModel = viewModel(), homeViewModel: HomeViewModel = viewModel()){
     val userData by logInViewModel.fetchUserState.collectAsState()
     fun ManipulateEmail(email: String): String {
         return email.replace("@", "%40")
     }
 
-    Column(Modifier.fillMaxSize().background(color = Color(0XFF090E12))) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(color = Color(0XFF090E12))) {
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(110.dp)
+                .height(120.dp)
                 .shadow(
                     elevation = 10.dp,
                     clip = true,
@@ -78,16 +84,21 @@ fun Profile(modifier: Modifier, navController: NavHostController, logInViewModel
                     shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
                 ), contentAlignment = Alignment.CenterStart
         ) {
-            Column(Modifier.padding(PaddingValues(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 10.dp))) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    BackButton(modifier = Modifier, { navController.navigate("home") })
-                    Spacer(modifier = Modifier.width(20.dp))
-                    Text(
-                        text = "Profile",
-                        color = Color.White,
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+            Column(Modifier.padding(PaddingValues(top = 40.dp, start = 20.dp, end = 20.dp, bottom = 10.dp))) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                    Row(verticalAlignment = Alignment.CenterVertically){
+                        BackButton(modifier = Modifier, { navController.navigate("home") })
+                        Spacer(modifier = Modifier.width(20.dp))
+                        Text(
+                            text = "Profile",
+                            color = Color.White,
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Icon(imageVector = Icons.Filled.Logout, contentDescription = "", tint = Color(0XFFfdfbff), modifier = Modifier.size(30.dp).clickable {
+                        logInViewModel.logout()
+                    })
                 }
 
             }
